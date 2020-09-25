@@ -1,26 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext, useState } from "react";
+import { I18nProvider, I18nContext } from "./context";
+
+function Select() {
+  const i18n = useContext(I18nContext);
+
+  const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    i18n.setCode(event.target.value);
+  };
+
+  return (
+    <select value={i18n.code} onChange={onChange}>
+      <option value="de">Deutsch</option>
+      <option value="en">English</option>
+    </select>
+  );
+}
 
 function App() {
+  const i18n = useContext(I18nContext);
+
+  const [value, setValue] = useState(0);
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.valueAsNumber);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <p>Hello enterJS 2020!</p>
+      <Select />
+      <div>
+        <input type="number" value={value} onChange={onChange} />
+      </div>
+      <p>{i18n.translate("settings")}</p>
+      <p>{i18n.translateValue("photos", value)}</p>
     </div>
   );
 }
 
-export default App;
+function Main() {
+  return (
+    <I18nProvider>
+      <App />
+    </I18nProvider>
+  );
+}
+
+export default Main;
